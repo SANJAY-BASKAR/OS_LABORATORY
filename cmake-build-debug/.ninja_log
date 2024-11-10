@@ -1,0 +1,14 @@
+# ninja log v5
+73	403	7529389150852876	CMakeFiles/OS_LAB.dir/fit1_first.cpp.obj	c5ae8a229aa5f2b0
+1	408	7529389150907557	CMakeFiles/OS_LAB.dir/sequential.cpp.obj	1a6f560f1fe32013
+50	414	7529389150959445	CMakeFiles/OS_LAB.dir/indexed.cpp.obj	3a43d39932a3c364
+280	545	7529389152301691	CMakeFiles/OS_LAB.dir/sjf.cpp.obj	7e3b9b610066c3ec
+130	474	7529389151561704	CMakeFiles/OS_LAB.dir/best_fit.cpp.obj	9075e4344a46b628
+130	282	7529389332268191	CMakeFiles/OS_LAB.dir/pages_lru.cpp.obj	b9fb6d2545aa2404
+187	504	7529389151901703	CMakeFiles/OS_LAB.dir/fcfs.cpp.obj	ff34704a9947696d
+37	279	7529389332226641	CMakeFiles/OS_LAB.dir/rr.cpp.obj	d443f8048f6da14f
+150	335	7529389332808194	CMakeFiles/OS_LAB.dir/bankers_algorithm.cpp.obj	dfd2448482b88a66
+93	323	7529653822125352	CMakeFiles/OS_LAB.dir/page_lfu.cpp.obj	e61fea12ac884d53
+117	325	7529653822155329	CMakeFiles/OS_LAB.dir/pages_lru.cpp.obj	b9fb6d2545aa2404
+144	388	7529653822803117	CMakeFiles/OS_LAB.dir/phil_test.c.obj	c1169a45ad46734e
+5	261	7529653975741088	CMakeFiles/OS_LAB.dir/dining_philosopher.cpp.obj	caf7b871952c02cd

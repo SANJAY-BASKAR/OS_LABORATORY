@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>dining_philosopher.cpp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #b3ae60;}
+.s1 { color: #bcbec4;}
+.s2 { color: #6aab73;}
+.s3 { color: #2aacb8;}
+.s4 { color: #bcbec4;}
+.s5 { color: #cf8e6d;}
+.s6 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+dining_philosopher.cpp</font>
+</center></td></tr></table>
+<pre><span class="s0">#include </span><span class="s2">&lt;stdio.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;stdlib.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;pthread.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;unistd.h&gt;</span>
+
+<span class="s0">#define </span><span class="s1">NUM_PHILOSOPHERS </span><span class="s3">5</span>
+
+<span class="s1">pthread_mutex_t forks</span><span class="s4">[</span><span class="s1">NUM_PHILOSOPHERS</span><span class="s4">];</span>
+
+<span class="s5">void</span><span class="s4">* </span><span class="s1">philosopher</span><span class="s4">(</span><span class="s5">void</span><span class="s4">* </span><span class="s1">num</span><span class="s4">) {</span>
+    <span class="s5">int </span><span class="s1">id </span><span class="s4">= *(</span><span class="s5">int</span><span class="s4">*)</span><span class="s1">num</span><span class="s4">;</span>
+
+    <span class="s5">while </span><span class="s4">(</span><span class="s3">1</span><span class="s4">) {</span>
+        <span class="s1">printf</span><span class="s4">(</span><span class="s2">&quot;Philosopher %d is thinking.</span><span class="s5">\n</span><span class="s2">&quot;</span><span class="s4">, </span><span class="s1">id</span><span class="s4">);</span>
+        <span class="s1">sleep</span><span class="s4">(</span><span class="s1">rand</span><span class="s4">() % </span><span class="s3">3</span><span class="s4">); </span><span class="s6">// Simulate thinking time</span>
+
+        <span class="s6">// Pick up the left fork</span>
+        <span class="s1">pthread_mutex_lock</span><span class="s4">(&amp;</span><span class="s1">forks</span><span class="s4">[</span><span class="s1">id</span><span class="s4">]);</span>
+        <span class="s1">printf</span><span class="s4">(</span><span class="s2">&quot;Philosopher %d picked up left fork.</span><span class="s5">\n</span><span class="s2">&quot;</span><span class="s4">, </span><span class="s1">id</span><span class="s4">);</span>
+
+        <span class="s6">// Pick up the right fork</span>
+        <span class="s1">pthread_mutex_lock</span><span class="s4">(&amp;</span><span class="s1">forks</span><span class="s4">[(</span><span class="s1">id </span><span class="s4">+ </span><span class="s3">1</span><span class="s4">) % </span><span class="s1">NUM_PHILOSOPHERS</span><span class="s4">]);</span>
+        <span class="s1">printf</span><span class="s4">(</span><span class="s2">&quot;Philosopher %d picked up right fork.</span><span class="s5">\n</span><span class="s2">&quot;</span><span class="s4">, </span><span class="s1">id</span><span class="s4">);</span>
+
+        <span class="s6">// Eating</span>
+        <span class="s1">printf</span><span class="s4">(</span><span class="s2">&quot;Philosopher %d is eating.</span><span class="s5">\n</span><span class="s2">&quot;</span><span class="s4">, </span><span class="s1">id</span><span class="s4">);</span>
+        <span class="s1">sleep</span><span class="s4">(</span><span class="s1">rand</span><span class="s4">() % </span><span class="s3">3</span><span class="s4">); </span><span class="s6">// Simulate eating time</span>
+
+        <span class="s6">// Put down the right fork</span>
+        <span class="s1">pthread_mutex_unlock</span><span class="s4">(&amp;</span><span class="s1">forks</span><span class="s4">[(</span><span class="s1">id </span><span class="s4">+ </span><span class="s3">1</span><span class="s4">) % </span><span class="s1">NUM_PHILOSOPHERS</span><span class="s4">]);</span>
+        <span class="s1">printf</span><span class="s4">(</span><span class="s2">&quot;Philosopher %d put down right fork.</span><span class="s5">\n</span><span class="s2">&quot;</span><span class="s4">, </span><span class="s1">id</span><span class="s4">);</span>
+
+        <span class="s6">// Put down the left fork</span>
+        <span class="s1">pthread_mutex_unlock</span><span class="s4">(&amp;</span><span class="s1">forks</span><span class="s4">[</span><span class="s1">id</span><span class="s4">]);</span>
+        <span class="s1">printf</span><span class="s4">(</span><span class="s2">&quot;Philosopher %d put down left fork.</span><span class="s5">\n</span><span class="s2">&quot;</span><span class="s4">, </span><span class="s1">id</span><span class="s4">);</span>
+    <span class="s4">}</span>
+<span class="s4">}</span>
+
+<span class="s5">int </span><span class="s1">main</span><span class="s4">() {</span>
+    <span class="s1">pthread_t philosophers</span><span class="s4">[</span><span class="s1">NUM_PHILOSOPHERS</span><span class="s4">];</span>
+    <span class="s5">int </span><span class="s1">philosopher_ids</span><span class="s4">[</span><span class="s1">NUM_PHILOSOPHERS</span><span class="s4">];</span>
+
+    <span class="s6">// Initialize mutexes for forks</span>
+    <span class="s5">for </span><span class="s4">(</span><span class="s5">int </span><span class="s1">i </span><span class="s4">= </span><span class="s3">0</span><span class="s4">; </span><span class="s1">i </span><span class="s4">&lt; </span><span class="s1">NUM_PHILOSOPHERS</span><span class="s4">; </span><span class="s1">i</span><span class="s4">++) {</span>
+        <span class="s1">pthread_mutex_init</span><span class="s4">(&amp;</span><span class="s1">forks</span><span class="s4">[</span><span class="s1">i</span><span class="s4">], </span><span class="s1">NULL</span><span class="s4">);</span>
+        <span class="s1">philosopher_ids</span><span class="s4">[</span><span class="s1">i</span><span class="s4">] = </span><span class="s1">i</span><span class="s4">;</span>
+    <span class="s4">}</span>
+
+    <span class="s6">// Create philosopher threads</span>
+    <span class="s5">for </span><span class="s4">(</span><span class="s5">int </span><span class="s1">i </span><span class="s4">= </span><span class="s3">0</span><span class="s4">; </span><span class="s1">i </span><span class="s4">&lt; </span><span class="s1">NUM_PHILOSOPHERS</span><span class="s4">; </span><span class="s1">i</span><span class="s4">++) {</span>
+        <span class="s1">pthread_create</span><span class="s4">(&amp;</span><span class="s1">philosophers</span><span class="s4">[</span><span class="s1">i</span><span class="s4">], </span><span class="s1">NULL</span><span class="s4">, </span><span class="s1">philosopher</span><span class="s4">, &amp;</span><span class="s1">philosopher_ids</span><span class="s4">[</span><span class="s1">i</span><span class="s4">]);</span>
+    <span class="s4">}</span>
+
+    <span class="s6">// Wait for philosopher threads to finish (they won't in this example)</span>
+    <span class="s5">for </span><span class="s4">(</span><span class="s5">int </span><span class="s1">i </span><span class="s4">= </span><span class="s3">0</span><span class="s4">; </span><span class="s1">i </span><span class="s4">&lt; </span><span class="s1">NUM_PHILOSOPHERS</span><span class="s4">; </span><span class="s1">i</span><span class="s4">++) {</span>
+        <span class="s1">pthread_join</span><span class="s4">(</span><span class="s1">philosophers</span><span class="s4">[</span><span class="s1">i</span><span class="s4">], </span><span class="s1">NULL</span><span class="s4">);</span>
+    <span class="s4">}</span>
+
+    <span class="s6">// Destroy mutexes</span>
+    <span class="s5">for </span><span class="s4">(</span><span class="s5">int </span><span class="s1">i </span><span class="s4">= </span><span class="s3">0</span><span class="s4">; </span><span class="s1">i </span><span class="s4">&lt; </span><span class="s1">NUM_PHILOSOPHERS</span><span class="s4">; </span><span class="s1">i</span><span class="s4">++) {</span>
+        <span class="s1">pthread_mutex_destroy</span><span class="s4">(&amp;</span><span class="s1">forks</span><span class="s4">[</span><span class="s1">i</span><span class="s4">]);</span>
+    <span class="s4">}</span>
+
+    <span class="s5">return </span><span class="s3">0</span><span class="s4">;</span>
+<span class="s4">}</span></pre>
+</body>
+</html>
